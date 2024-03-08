@@ -19,7 +19,7 @@ in your [pubspec.yaml](https://dart.dev/tools/pub/pubspec):
 
 ```yaml
 dependencies:
-  geosort: ^0.0.1
+  geosort: ^0.0.2
 ```
 
 You can install packages from the command line:
@@ -47,14 +47,34 @@ void main() {
   double referenceLat = 0.0;
   double referenceLong = 0.0;
 
-  // Sort the list by distance
+// Sort the list by distance
   List<Map<String, dynamic>> sortedLocations =
-      sortByLatLong(locations, referenceLat, referenceLong);
+      GeoSort.sortByLatLong(locations: locations, latitude: referenceLat, longitude: referenceLong);
+
 
   // Print sorted list
   print(sortedLocations);
 }
 ```
+
+# Explanation of Parameters
+
+ascending: true means that the sorted list will be in ascending 
+order based on the distance from the reference location. If set to
+false, the list will be sorted in descending order.
+
+maxDistance: 500 defines the maximum distance (in kilometers) within 
+which items will be included in the sorted list. Items beyond this 
+distance will be excluded from the list.
+
+maxElements: 5 specifies the maximum number of elements to include
+in the sorted list. If the total number of available elements is 
+greater than maxElements, only the first maxElements elements will 
+be included in the sorted list.
+
+These parameters provide additional control over the selection and 
+sorting of items in the list based on user preferences or specific 
+application requirements.
 
 ## Contributing
 Contributions to Geosort are welcome! Please feel free to 
