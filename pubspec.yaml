@@ -1,6 +1,6 @@
 name: geo_sort
 description: A Dart package for sorting a list of geographic locations based on their distance from a reference location.
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/mariorefetto/geo_sort
 issue_tracker: https://github.com/mariorefetto/geo_sort/issues
 homepage: https://www.mariorefetto.it
