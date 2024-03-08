@@ -1,56 +1,40 @@
-import 'dart:math';
+import 'package:geo_sort/src/utils/utils.dart';
 
-class Coordinates {
-  final double latitude;
-  final double longitude;
+class GeoSort {
+  static List<T> sortByLatLong<T>({
+    required List<T> items,
+    required double latitude,
+    required double longitude,
+    bool ascending = true,
+  }) {
+    final List<MapEntry<double, T>> distanceItemList = [];
 
-  Coordinates(this.latitude, this.longitude);
-}
+    for (var item in items) {
+      final lat = _getDoubleValue(item, 'lat');
+      final long = _getDoubleValue(item, 'long');
 
-List<Map<String, dynamic>> sortByCoordinate(
-    List<Map<String, dynamic>> locations, Coordinates reference,
-    {bool ascending = true}) {
-  _calculateDistance(locations, reference);
+      if (lat == null || long == null) {
+        return items;
+      }
 
-  locations.sort((a, b) {
-    double distanceA = a['distance'];
-    double distanceB = b['distance'];
-    return ascending ? distanceA.compareTo(distanceB) : distanceB.compareTo(distanceA);
-  });
-
-  return locations;
-}
-
-List<Map<String, dynamic>> sortByLatLong(
-    List<Map<String, dynamic>> locations, double latitude, double longitude,
-    {bool ascending = true}) {
-  Coordinates reference = Coordinates(latitude, longitude);
-  return sortByCoordinate(locations, reference, ascending: ascending);
-}
-
-void _calculateDistance(List<Map<String, dynamic>> locations, Coordinates reference) {
-  for (var location in locations) {
-    if (!location.containsKey('distance')) {
-      double lat = location['lat'];
-      double lon = location['long'];
-      double distance =
-          getDistanceFromLatLonInKm(reference.latitude, reference.longitude, lat, lon);
-      location['distance'] = distance;
+      final distance = getDistanceFromLatLonInKm(latitude, longitude, lat, long);
+      distanceItemList.add(MapEntry(distance, item));
     }
+
+    distanceItemList.sort((a, b) {
+      return ascending ? a.key.compareTo(b.key) : b.key.compareTo(a.key);
+    });
+
+    return distanceItemList.map((e) => e.value).toList();
   }
-}
 
-double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
-  const double R = 6371; // Radius of the earth in km
-  double dLat = deg2rad(lat2 - lat1); // deg2rad below
-  double dLon = deg2rad(lon2 - lon1);
-  double a = (sin(dLat / 2) * sin(dLat / 2)) +
-      (cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * sin(dLon / 2) * sin(dLon / 2));
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double d = R * c; // Distance in km
-  return d; // distance returned
-}
+  static double? _getDoubleValue<T>(T object, String propertyName) {
+    final value = object is Map<String, dynamic>
+        ? object[propertyName]
+        : object is Map<String, Object?>
+            ? object[propertyName]
+            : (object as dynamic).toJson()[propertyName];
 
-double deg2rad(double deg) {
-  return deg * (pi / 180);
+    return value?.toDouble();
+  }
 }
