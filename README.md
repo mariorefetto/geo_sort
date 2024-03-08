@@ -19,7 +19,7 @@ in your [pubspec.yaml](https://dart.dev/tools/pub/pubspec):
 
 ```yaml
 dependencies:
-  geo_sort: ^0.0.2
+  geo_sort: ^0.0.3
 ```
 
 You can install packages from the command line:
