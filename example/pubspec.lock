@@ -78,11 +78,10 @@ packages:
   geo_sort:
     dependency: "direct main"
     description:
-      name: geo_sort
-      sha256: "18d10601890efb9d55ae2747578385793a0765fe69a38229e13197d9c49fcce3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
+      path: "packages/geo_sort"
+      relative: true
+    source: path
+    version: "0.0.3"
   leak_tracker:
     dependency: transitive
     description:
