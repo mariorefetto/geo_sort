@@ -1,3 +1,4 @@
+import 'package:geo_sort/src/extensions/extensions.dart';
 import 'package:geo_sort/src/utils/utils.dart';
 
 /// A utility class for sorting a list of items by their distance from a reference location.
@@ -11,7 +12,7 @@ class GeoSort {
   /// The [maxElements] parameter specifies the maximum number of elements to return in the sorted list.
   ///
   /// Returns a sorted list of items.
-  static List<T> sortByLatLong<T>({
+  static List<T> sortByLatLong<T extends HasLocation>({
     required List<T> items,
     required double latitude,
     required double longitude,
@@ -21,12 +22,13 @@ class GeoSort {
   }) {
     final List<MapEntry<double, T>> distanceItemList = [];
     for (var item in items) {
-      final lat = _getDoubleValue(item, 'lat');
-      final long = _getDoubleValue(item, 'long');
+      final lat = getDoublePropertyValue(item, 'latitude');
+      final long = getDoublePropertyValue(item, 'longitude');
 
-      if (lat == null || long == null) return items;
+      if (lat == null || long == null) continue;
 
-      double distance = getDistanceFromLatLonInKm(latitude, longitude, lat, long);
+      double distance =
+          getDistanceFromLatLonInKm(latitude, longitude, lat, long);
       if (maxDistance != null && distance > maxDistance) continue;
       distanceItemList.add(MapEntry(distance, item));
     }
@@ -48,13 +50,17 @@ class GeoSort {
   /// The [propertyName] parameter is the name of the property.
   ///
   /// Returns the double value of the property, or null if the property is not found or is not a double.
-  static double? _getDoubleValue<T>(T object, String propertyName) {
-    final value = object is Map<String, dynamic>
-        ? object[propertyName]
-        : object is Map<String, Object?>
-            ? object[propertyName]
-            : (object as dynamic).toJson()[propertyName];
-
-    return value?.toDouble();
+  ///
+  static double? getDoublePropertyValue<T>(T object, String propertyName) {
+    if (object is HasLocation) {
+      // If the object implements HasLocation, we can directly access its latitude and longitude properties
+      if (propertyName == 'latitude') {
+        return object.latitude;
+      } else if (propertyName == 'longitude') {
+        return object.longitude;
+      }
+    }
+    // If the object does not contain the desired property or is not of a compatible type, return null
+    return null;
   }
 }

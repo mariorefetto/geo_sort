@@ -19,7 +19,7 @@ in your [pubspec.yaml](https://dart.dev/tools/pub/pubspec):
 
 ```yaml
 dependencies:
-  geo_sort: ^0.0.3
+  geo_sort: ^0.1.0
 ```
 
 You can install packages from the command line:
@@ -30,51 +30,117 @@ pub get
 
 ## Usage
 
-Here's an example of how to use Geosort:
+First, you need to create a class that implements the HasLocation 
+interface, like this:
 
 ```dart
-import 'package:geosort/geosort.dart';
+class TestLocation implements HasLocation {
+  final int id;
+  final String city;
+  @override
+  final double latitude;
+  @override
+  final double longitude;
 
-void main() {
-  // List of locations
-  List<Map<String, dynamic>> locations = [
-    {'name': 'Location A', 'lat': 1.0, 'long': 1.0},
-    {'name': 'Location B', 'lat': 2.0, 'long': 2.0},
-    {'name': 'Location C', 'lat': 3.0, 'long': 3.0},
-  ];
+  TestLocation({
+    required this.id,
+    required this.city,
+    required this.latitude,
+    required this.longitude,
+  });
 
-  // Reference coordinates
-  double referenceLat = 0.0;
-  double referenceLong = 0.0;
-
-// Sort the list by distance
-  List<Map<String, dynamic>> sortedLocations =
-      GeoSort.sortByLatLong(locations: locations, latitude: referenceLat, longitude: referenceLong);
-
-
-  // Print sorted list
-  print(sortedLocations);
 }
 ```
+Then, create a list of TestLocation objects:
+
+```dart
+final List<TestLocation> locations = [
+  TestLocation(id: 1, city: 'Rome', latitude: 41.9028, longitude: 12.4964),
+  TestLocation(id: 2, city: 'Milan', latitude: 45.4642, longitude: 9.1900),
+  TestLocation(id: 3, city: 'Naples', latitude: 40.8518, longitude: 14.2681),
+];
+```
+
+Now, you can use the GeoSort class to sort the list of locations by 
+distance from a reference location. Here's how:
+
+
+```dart
+final sortedLocations = GeoSort.sortByLatLong(
+  items: locations,
+  latitude: 41.9028,
+  longitude: 12.4964,
+  ascending: false,
+);
+```
+
+This will sort the locations list by distance from the coordinates (41.9028, 12.4964) in descending order.
 
 # Explanation of Parameters
 
-ascending: true means that the sorted list will be in ascending 
-order based on the distance from the reference location. If set to
-false, the list will be sorted in descending order.
+items: The list of locations to be sorted.
 
-maxDistance: 500 defines the maximum distance (in kilometers) within 
-which items will be included in the sorted list. Items beyond this 
-distance will be excluded from the list.
+latitude and longitude: The coordinates of the reference location.
 
-maxElements: 5 specifies the maximum number of elements to include
-in the sorted list. If the total number of available elements is 
-greater than maxElements, only the first maxElements elements will 
-be included in the sorted list.
+ascending: Indicates whether to sort the items in ascending order (default) or descending order.
 
-These parameters provide additional control over the selection and 
-sorting of items in the list based on user preferences or specific 
-application requirements.
+maxDistance: Defines the maximum distance (in kilometers) within which items
+will be included in the sorted list. 
+
+maxElements: Specifies the maximum number of elements to include in the sorted list. 
+
+These parameters provide additional control over the selection and sorting of
+items in the list based on user preferences or specific application requirements.
+
+# Full Code
+
+```dart
+import 'package:geo_sort/src/extensions/extensions.dart';
+import 'package:geo_sort/src/utils/utils.dart';
+
+class TestLocation implements HasLocation {
+  final int id;
+  final String city;
+  @override
+  final double latitude;
+  @override
+  final double longitude;
+
+  TestLocation({
+    required this.id,
+    required this.city,
+    required this.latitude,
+    required this.longitude,
+  });
+}
+
+void main() {
+  // Create a list of TestLocation instances
+  final List<TestLocation> locations = [
+    TestLocation(id: 1, city: 'Rome', latitude: 41.9028, longitude: 12.4964),
+    TestLocation(id: 2, city: 'Milan', latitude: 45.4642, longitude: 9.1900),
+    TestLocation(id: 3, city: 'Naples', latitude: 40.8518, longitude: 14.2681),
+  ];
+
+  // Reference coordinates
+  final double referenceLat = 41.9028;
+  final double referenceLong = 12.4964;
+
+  // Sort the list by distance
+  final sortedLocations = GeoSort.sortByLatLong<TestLocation>(
+    items: locations,
+    latitude: referenceLat,
+    longitude: referenceLong,
+    ascending: false,
+  );
+
+  // Print sorted list
+  print('Sorted Locations:');
+  sortedLocations.forEach((location) {
+    print('${location.city}: ${location.latitude}, ${location.longitude}');
+  });
+}
+```
 
 ## Contributing
 Contributions to Geosort are welcome! Please feel free to 
