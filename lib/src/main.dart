@@ -12,7 +12,7 @@ class GeoSort {
   /// The [maxElements] parameter specifies the maximum number of elements to return in the sorted list.
   ///
   /// Returns a sorted list of items.
-  static List<T> sortByLatLong<T>({
+  static List<T> sortByLatLong<T extends HasLocation>({
     required List<T> items,
     required double latitude,
     required double longitude,
