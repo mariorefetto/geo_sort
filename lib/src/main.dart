@@ -27,7 +27,8 @@ class GeoSort {
 
       if (lat == null || long == null) continue;
 
-      double distance = getDistanceFromLatLonInKm(latitude, longitude, lat, long);
+      double distance =
+          getDistanceFromLatLonInKm(latitude, longitude, lat, long);
       if (maxDistance != null && distance > maxDistance) continue;
       distanceItemList.add(MapEntry(distance, item));
     }
