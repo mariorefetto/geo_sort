@@ -133,15 +133,19 @@ class _LocationListScreenState extends State<LocationListScreen> {
         longitude: 11.1027),
   ];
 
-  final TextEditingController _latitudeController = TextEditingController(text: '41.9028');
-  final TextEditingController _longitudeController = TextEditingController(text: '12.4964');
+  final TextEditingController _latitudeController =
+      TextEditingController(text: '41.9028');
+  final TextEditingController _longitudeController =
+      TextEditingController(text: '12.4964');
 
   bool _ascending = true;
   void _sortLocations(bool ascending) {
-    final latitude =
-        _latitudeController.text.isNotEmpty ? double.parse(_latitudeController.text) : 41.9028;
-    final longitude =
-        _longitudeController.text.isNotEmpty ? double.parse(_longitudeController.text) : 12.4964;
+    final latitude = _latitudeController.text.isNotEmpty
+        ? double.parse(_latitudeController.text)
+        : 41.9028;
+    final longitude = _longitudeController.text.isNotEmpty
+        ? double.parse(_longitudeController.text)
+        : 12.4964;
 
     setState(() {
       _ascending = ascending;
@@ -200,7 +204,8 @@ class _LocationListScreenState extends State<LocationListScreen> {
                     child: TextField(
                       controller: _latitudeController,
                       decoration: const InputDecoration(labelText: 'Latitude'),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -208,7 +213,8 @@ class _LocationListScreenState extends State<LocationListScreen> {
                     child: TextField(
                       controller: _longitudeController,
                       decoration: const InputDecoration(labelText: 'Longitude'),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                     ),
                   ),
                 ],
