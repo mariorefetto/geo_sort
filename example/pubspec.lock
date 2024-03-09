@@ -78,7 +78,7 @@ packages:
   geo_sort:
     dependency: "direct main"
     description:
-      path: "packages/geo_sort"
+      path: "../geo_sort"
       relative: true
     source: path
     version: "0.0.3"
