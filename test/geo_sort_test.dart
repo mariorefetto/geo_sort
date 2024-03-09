@@ -2,31 +2,64 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:geo_sort/geo_sort.dart';
 
 void main() {
-  test('Test sortByLatLong with maxDistance and maxElements', () {
-    final items = [
-      {'id': '1', 'lat': 37.07395, 'long': 14.217377},
-      {'id': '2', 'lat': 37.507877, 'long': 15.08303},
-      {'id': '3', 'lat': 38.115688, 'long': 13.361267},
-      {'id': '4', 'lat': 38.193813, 'long': 15.554015},
-      {'id': '5', 'lat': 37.237589, 'long': 14.51027},
-      {'id': '6', 'lat': 38.217058, 'long': 15.239605},
-      {'id': '7', 'lat': 41.125547, 'long': 16.866769},
-      {'id': '8', 'lat': 37.108379, 'long': 13.947512},
-      {'id': '9', 'lat': 41.902783, 'long': 12.496365},
-      {'id': '10', 'lat': 45.464203, 'long': 9.189982},
-      {'id': '11', 'lat': 45.070312, 'long': 7.686856},
-      {'id': '12', 'lat': 37.251057, 'long': 14.295457},
-    ];
+  group('GeoSort', () {
+    test('sortByLatLong sorts items by distance in ascending order', () {
+      final List<TestLocation> locations = [
+        TestLocation(
+            id: 1, city: 'Rome', latitude: 41.9028, longitude: 12.4964),
+        TestLocation(
+            id: 2, city: 'Milan', latitude: 45.4642, longitude: 9.1900),
+        TestLocation(
+            id: 3, city: 'Naples', latitude: 40.8518, longitude: 14.2681),
+      ];
 
-    final sortedItems = GeoSort.sortByLatLong(
-      items: items,
-      latitude: 37.07395,
-      longitude: 14.217377,
-      ascending: true,
-      maxDistance: 500,
-      maxElements: 5,
-    );
+      final sortedLocations = GeoSort.sortByLatLong(
+        items: locations,
+        latitude: 41.9028,
+        longitude: 12.4964,
+      );
 
-    expect(sortedItems.length, equals(5));
+      expect(sortedLocations.map((loc) => loc.city),
+          orderedEquals(['Rome', 'Naples', 'Milan']));
+    });
+
+    test('sortByLatLong sorts items by distance in descending order', () {
+      final List<TestLocation> locations = [
+        TestLocation(
+            id: 1, city: 'Rome', latitude: 41.9028, longitude: 12.4964),
+        TestLocation(
+            id: 2, city: 'Milan', latitude: 45.4642, longitude: 9.1900),
+        TestLocation(
+            id: 3, city: 'Naples', latitude: 40.8518, longitude: 14.2681),
+      ];
+
+      final sortedLocations = GeoSort.sortByLatLong(
+        items: locations,
+        latitude: 41.9028,
+        longitude: 12.4964,
+        ascending: false,
+      );
+
+      expect(sortedLocations.map((loc) => loc.city),
+          orderedEquals(['Milan', 'Naples', 'Rome']));
+    });
   });
+}
+
+class TestLocation implements HasLocation {
+  final int id;
+  final String city;
+  @override
+  final double latitude;
+  @override
+  final double longitude;
+
+  TestLocation(
+      {required this.id,
+      required this.city,
+      required this.latitude,
+      required this.longitude});
+
+  double? getLatitude() => latitude;
+  double? getLongitude() => longitude;
 }
