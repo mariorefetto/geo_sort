@@ -17,7 +17,7 @@ class SortApp extends StatelessWidget {
     return MaterialApp(
       title: 'Location List Order with GeoSort',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
       home: const LocationListScreen(),
     );
@@ -163,12 +163,10 @@ class _LocationListScreenState extends State<LocationListScreen> {
 
   bool _ascending = true;
   void _sortLocations(bool ascending) {
-    final latitude = _latitudeController.text.isNotEmpty
-        ? double.parse(_latitudeController.text)
-        : 41.9028;
-    final longitude = _longitudeController.text.isNotEmpty
-        ? double.parse(_longitudeController.text)
-        : 12.4964;
+    final latitude =
+        double.tryParse(_latitudeController.text) ?? 41.9028;
+    final longitude =
+        double.tryParse(_longitudeController.text) ?? 12.4964;
 
     setState(() {
       _ascending = ascending;
