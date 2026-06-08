@@ -1,3 +1,21 @@
+## 0.2.0
+
++ Added `latlong2` as dependency, replacing the internal Haversine implementation.
++ Added `GeoDistanceAlgorithm` enum to choose the distance formula per call.
++ Added support for **Vincenty** algorithm (accurate to ~0.5 mm on WGS-84 ellipsoid) via `GeoDistanceAlgorithm.vincenty`.
++ **Haversine** remains the default (`GeoDistanceAlgorithm.haversine`), powered by `latlong2`.
+
+* Updated minimum Flutter version to `>=3.27.0`.
+* Updated `flutter_lints` to `^6.0.0`.
+* Updated `cupertino_icons` to `^1.0.8` in example.
+* Updated README with algorithm selection docs and parameter table.
+
+- Removed internal `utils.dart` and custom Haversine formula (replaced by `latlong2`).
+- Removed `GeoSort.getDoublePropertyValue` — `sortByLatLong` now accesses `HasLocation` properties directly.
+
+* Fixed deprecated `ThemeData.primarySwatch` in example (now uses `ColorScheme.fromSeed`).
+* Fixed potential `FormatException` crash in example when coordinate fields contain invalid input (`double.tryParse` with fallback).
+
 ## 0.1.0
 
 + Added support for sorting locations by distance from a reference location.
